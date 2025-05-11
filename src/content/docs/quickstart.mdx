@@ -1,0 +1,64 @@
+---
+title: Quickstart Guide
+description: Get up and running with the workshop in minutes
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import { Aside } from '@astrojs/starlight/components';
+
+# Welcome to Sentry Build Workshop
+
+Follow this guide to get up and running with the Unborked Mobile application. 
+
+## Prerequisites
+
+- XCode and the IOS simulator installed
+- Expo CLI installed
+
+Additionally, you'll need a Sentry account to follow along with the error monitoring portions of this workshop:
+
+- [Sign up for a free Sentry.io](https://sentry.io/signup/) if you don't already have an account
+
+## Setup Instructions
+
+<Steps>
+  1. **Clone the repository**
+
+     ```bash
+     git clone https://github.com/codyde/sentry-build-unborked
+     ```
+
+  2. **Navigate to the project directory**
+
+     ```bash
+     cd sentry-build-unborked
+     ```
+
+  3. **Install dependencies**
+
+     ```bash
+     npm i
+     npx expo run:ios
+     ```
+     
+      <Aside type='caution'>
+      Heads up - This takes a while, get some water...
+      </Aside>
+
+</Steps>
+
+## What's Available After Setup
+
+Once you've completed the setup, you'll have access to:
+
+- Unborked on IOS - A React Native / Expo application
+- The application running on an IOS simulator within XCode
+- Error tracking and monitoring capabilities
+- Replay functionality to diagnose user issues
+- Performance monitoring tools
+
+This setup allows you to explore all the workshop modules, including error monitoring, session replays, performance tracking, and AI-powered fixes with Sentry.
+
+## Next Steps
+
+Once your environment is running, head to the [Configuring Sentry](/configure-sentry/) module to start learning how to identify and fix errors using Sentry.

@@ -1,0 +1,41 @@
+---
+title: Welcome to Sentry Build
+description: Code Breaks, learn how to fix it faster with Sentry
+template: splash
+hero:
+  tagline: A hands on workshop diving into Sentry for Mobile featuring error monitoring, mobile replay, tracing, and more.
+  image:
+    file: /src/assets/sentry-glyph-light-400x367.png
+  actions:
+    - text: Get Started
+      link: /quickstart/
+      icon: right-arrow
+    - text: Sentry.io
+      link: https://sentry.io
+      icon: external
+---
+
+import { Card } from '@astrojs/starlight/components';
+
+## Workshop Modules
+
+<div class="horizontal-cards">
+	<Card title="Code Breaks... So What Now" icon="error">
+		Clone down the repo and get started quickly building alongside Sentry
+	</Card>
+	<Card title="Install and Configure Sentry" icon="add-document">
+		Learn how to setup Sentry in Unborked mobile; a React Native / Expo application for IOS
+	</Card>
+	<Card title="Turn down the noise" icon="videocamera">
+		Learn how to tune and adjust Sentry's monitoring to make sure you're only getting the alerts you need to get
+	</Card>
+	<Card title="Debugging on Mobile" icon="chart">
+		Learn how to effectively debug mobile errors using tools like Errors, Stack Traces, Mobile Replays
+	</Card>
+	<Card title="Configuring Tracing" icon="rocket">
+		Learn how to use tracing in Unborked mobile to understand how application communication and performance happens in Unborked
+	</Card>
+	<Card title="Exploring Seer" icon="rocket">
+		Learn how to use Seer to understand the root cause of issues and how to fix them..
+	</Card>
+</div>

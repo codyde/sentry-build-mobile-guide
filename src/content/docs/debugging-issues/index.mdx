@@ -1,0 +1,41 @@
+---
+title: "Introduction"
+description: "Introduction to debugging issues with Sentry"
+---
+
+So we've got Sentry installed now; great. Let's get set up to properly capture errors. We're jumping right into the code! 
+
+## Houston, We Have Several Problems
+
+Picture this: You visit ErrorFix's marketplace, eager to solve some costly errors (oh, the irony), and... *tumbleweeds*. The product list is emptier than a developer's coffee cup at 4 PM. You click the heroic "Fix Me" button, hoping for salvation, and... *loading spinner of doom*. Then? Nothing. Nada. Zip.
+
+![ErrorFix Marketplace](../../../assets/img/FirstSentryIssues.png)
+
+Something's clearly wrong with our product system, but right now we're debugging blind. It's like trying to find a missing semicolon in the dark. 
+
+## Understanding Sentry's Exception Capture
+
+When errors occur in your application, you need more than just a console log. Sentry's exception capture provides rich context that helps you understand what went wrong and how to fix it.
+
+## The Case of the Missing Products
+
+Our ErrorFix app has several major crime scenes we need to investigate:
+
+1. **The Ghost Town Marketplace** - Where products should be, but aren't
+2. **The Infinite Loading Loop of Doom** - When clicking product links leads to... nowhere
+3. **The Authentication Confusion** - When login attempts fail mysteriously
+4. **The Payment Predicament** - When checkout process breaks down
+
+Time to add some error tracking and figure out what's actually going wrong. The simplest way to capture an error with Sentry is using the `Sentry.captureException(error)` method:
+
+```javascript
+Sentry.captureException(error);
+```
+
+This method captures the error and sends it to Sentry, where it can be analyzed and reported.
+
+Let's dive into each issue one by one in the following sections.
+
+
+
+

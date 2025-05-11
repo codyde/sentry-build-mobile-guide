@@ -1,0 +1,88 @@
+---
+title: Wrapping Up!
+description: Wrapping up the workshop
+---
+
+import { Card, CardGrid } from '@astrojs/starlight/components';
+
+## What We've Covered
+
+Throughout this workshop, you've gained hands-on experience with Sentry's powerful error monitoring and debugging capabilities. Let's recap what we've learned:
+
+### 1. Setting Up Sentry in a Next.js Application
+
+We started by integrating Sentry into our Next.js application, configuring the SDK, and understanding how error tracking works across both client and server components.
+
+### 2. Debugging Real-world Issues
+
+We tackled four common but challenging issues that developers face in production applications:
+
+- **Products API Error Handling**: You learned how to properly capture exceptions in API routes and how to add contextual information to errors for better debugging.
+
+- **Fix Me Button Functionality**: We explored how to trace issues across the frontend and backend, identifying where communication breaks down between components.
+
+- **Authentication Header Mismatches**: You discovered how to monitor authentication flows and capture detailed information about auth failures to quickly resolve session issues.
+
+- **Payment Processing Problems**: We implemented breadcrumbs and custom spans to track user interactions and payment flows, providing visibility into complex transaction processes.
+
+### 3. Advanced Debugging Techniques
+
+Throughout these exercises, you've mastered several advanced debugging techniques:
+
+- Using custom error attributes to provide context for exceptions
+- Implementing breadcrumbs to track user journeys
+- Creating custom spans to monitor performance and trace transactions
+- Leveraging Sentry's trace view to understand the relationship between frontend and backend errors
+- Debugging asynchronous operations and API calls
+
+## What's Next?
+
+Sentry offers many more features beyond what we've covered in this workshop. Here are some areas you might want to explore next:
+
+<CardGrid>
+  <Card title="Performance Monitoring" icon="rocket">
+    Track your application's performance metrics, identify bottlenecks, and optimize user experience.
+    [Learn more about Performance Monitoring](https://docs.sentry.io/product/performance/)
+  </Card>
+
+  <Card title="Replays" icon="play">
+    See exactly what users experienced when errors occurred with pixel-perfect recreations of user sessions.
+    [Explore Session Replay](https://docs.sentry.io/product/session-replay/)
+  </Card>
+
+  <Card title="User Feedback" icon="comment">
+    Collect user feedback when errors occur to better understand the impact and context of issues.
+    [Set up User Feedback](https://docs.sentry.io/product/user-feedback/)
+  </Card>
+
+  <Card title="Profiling" icon="chart">
+    Identify performance bottlenecks at the code level with function-level timing data.
+    [Learn about Profiling](https://docs.sentry.io/product/profiling/)
+  </Card>
+</CardGrid>
+
+### More Monitoring Solutions
+
+- **[Uptime Monitoring](https://docs.sentry.io/product/alerts/create-alerts/uptime-alert-config/)**: Monitor your services' availability and be alerted when they're down.
+
+- **[Cron Monitoring](https://docs.sentry.io/platforms/javascript/guides/nextjs/crons/)**: Track the health and performance of your scheduled jobs and background tasks.
+
+- **[Web Vitals](https://docs.sentry.io/product/performance/web-vitals/)**: Measure and improve key user-centric metrics that affect user experience.
+
+- **[Release Health](https://docs.sentry.io/product/releases/)**: Monitor the health of releases to catch errors before they impact too many users.
+
+- **[Trace View](https://docs.sentry.io/product/performance/trace-view/)**: Get a complete picture of transactions as they propagate through your system.
+
+## Additional Resources
+
+- **[Sentry Documentation](https://docs.sentry.io/)**: Comprehensive guides and API references for all Sentry features.
+
+- **[Sentry Blog](https://sentry.io/blog/)**: Stay updated with the latest features, use cases, and best practices.
+
+- **[Sentry on GitHub](https://github.com/getsentry)**: Explore Sentry's open-source repositories and contribute to the project.
+
+## Final Thoughts
+
+By implementing proper error monitoring and debugging practices as demonstrated in this workshop, you're now equipped to build more resilient applications and provide better experiences for your users. Remember that the most effective debugging strategy is proactive monitoring combined with detailed context gathering.
+
+We hope you found this workshop valuable and that you'll continue exploring Sentry's capabilities to enhance your application development workflow. Happy debugging!

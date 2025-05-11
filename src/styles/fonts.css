@@ -1,0 +1,40 @@
+/* Inter font configuration */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url('/fonts/Inter-Regular.woff2') format('woff2'),
+       url('/fonts/Inter-Regular.woff') format('woff');
+}
+
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 900;
+  font-display: swap;
+  src: url('/fonts/Inter-Black.woff2') format('woff2'),
+       url('/fonts/Inter-Black.woff') format('woff');
+}
+
+/* Apply fonts properly */
+:root {
+  --sl-font: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --sl-font-headings: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  --sl-font-mono: monospace;
+}
+
+body {
+  font-family: var(--sl-font);
+  font-weight: 400;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--sl-font-headings);
+  font-weight: 900;
+}
+
+code, pre {
+  font-family: var(--sl-font-mono);
+  font-weight: normal;
+} 
