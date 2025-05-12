@@ -1,0 +1,108 @@
+---
+title: "Using Scaled Images"
+description: "How to use the ScaledImage component in your documentation"
+---
+
+import ScaledImage from '../../components/ScaledImage.astro';
+
+# Using Scaled Images
+
+The `ScaledImage` component allows you to display images with a custom size relative to their original dimensions. This is useful when you want to control the display size of images in your documentation without modifying the original files.
+
+## Basic Usage
+
+Import the component at the top of your MDX file:
+
+```mdx
+import ScaledImage from '../../components/ScaledImage.astro';
+```
+
+Then use it in your content:
+
+```mdx
+<ScaledImage 
+  src="/src/assets/img/example-image.png" 
+  alt="Description of the image" 
+  size={75} 
+/>
+```
+
+## Size Examples
+
+Here's how the same image looks at different sizes:
+
+### Full Size (100%)
+
+<ScaledImage 
+  src="/src/assets/img/SSOMobileError.png" 
+  alt="SSO Error - Full Size" 
+  size={100} 
+/>
+
+### 75% Size
+
+<ScaledImage 
+  src="/src/assets/img/SSOMobileError.png" 
+  alt="SSO Error - 75% Size" 
+  size={75} 
+/>
+
+### 50% Size
+
+<ScaledImage 
+  src="/src/assets/img/SSOMobileError.png" 
+  alt="SSO Error - 50% Size" 
+  size={50} 
+/>
+
+### 25% Size
+
+<ScaledImage 
+  src="/src/assets/img/SSOMobileError.png" 
+  alt="SSO Error - 25% Size" 
+  size={25} 
+/>
+
+## Adding Captions
+
+You can add captions to your images:
+
+<ScaledImage 
+  src="/src/assets/img/SSOMobileError.png" 
+  alt="SSO Error with Caption" 
+  size={60}
+  caption="This is a caption for the image explaining the SSO error in detail" 
+/>
+
+Here's how to add a caption in your MDX code:
+
+```mdx
+<ScaledImage 
+  src="/src/assets/img/example-image.png" 
+  alt="Image with caption" 
+  size={60}
+  caption="This is a descriptive caption for the image" 
+/>
+```
+
+## Custom Styling
+
+You can also add custom CSS classes:
+
+```mdx
+<ScaledImage 
+  src="/src/assets/img/example-image.png" 
+  alt="Image with custom class" 
+  size={60}
+  class="with-border" 
+/>
+```
+
+And then define those styles in your CSS:
+
+```css
+.with-border img {
+  border: 2px solid #6c5fc9;
+  border-radius: 8px;
+}
+``` 

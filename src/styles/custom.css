@@ -55,6 +55,12 @@
   font-weight: 600;
 }
 
+/* Make sure that sidebar links with aria-current="page" have white text */
+a[aria-current="page"],
+a[aria-current="page"] span {
+  color: white !important;
+}
+
 /* Main page styles */
 [data-has-hero] .hero {
   padding: 5rem 0 6rem;

@@ -1,39 +1,89 @@
 ---
 title: Wrapping Up!
-description: Wrapping up the workshop
+description: Wrapping up the Sentry Mobile Monitoring Workshop
 ---
 
 import { Card, CardGrid } from '@astrojs/starlight/components';
+import ScaledImage from '../../components/ScaledImage.astro';
 
 ## What We've Covered
 
-Throughout this workshop, you've gained hands-on experience with Sentry's powerful error monitoring and debugging capabilities. Let's recap what we've learned:
+Throughout this workshop, you've gained hands-on experience with Sentry's error monitoring and debugging capabilities for mobile applications. Let's recap what we've learned:
 
-### 1. Setting Up Sentry in a Next.js Application
+### 1. Tuning Alerts in Sentry
 
-We started by integrating Sentry into our Next.js application, configuring the SDK, and understanding how error tracking works across both client and server components.
+We started by understanding how to configure Sentry alerts effectively to avoid alert fatigue and ensure you get notified about issues that truly matter. You learned:
 
-### 2. Debugging Real-world Issues
+- How to set up volume-based alert rules to trigger based on error frequency
+- The importance of adjusting alert thresholds to reduce noise
+- Different alert types available in Sentry, from issue alerts to performance and anomaly detection
 
-We tackled four common but challenging issues that developers face in production applications:
+<ScaledImage 
+  src="/assets/img/AlertConfiguration.png" 
+  alt="Alert Configuration" 
+  size={90}
+  caption="Alert Configuration" 
+/>
 
-- **Products API Error Handling**: You learned how to properly capture exceptions in API routes and how to add contextual information to errors for better debugging.
 
-- **Fix Me Button Functionality**: We explored how to trace issues across the frontend and backend, identifying where communication breaks down between components.
+### 2. Debugging SSO with Sentry Issues
 
-- **Authentication Header Mismatches**: You discovered how to monitor authentication flows and capture detailed information about auth failures to quickly resolve session issues.
+In our first debugging exercise, we tackled a broken Single Sign-On (SSO) functionality:
 
-- **Payment Processing Problems**: We implemented breadcrumbs and custom spans to track user interactions and payment flows, providing visibility into complex transaction processes.
+- You explored Sentry's comprehensive issue details, including user impact and device information
+- You learned how stack traces help pinpoint exactly where in the code an error occurs
+- You experienced how mobile replays provide insight into the user's perspective when errors happen
+- You successfully identified and fixed a missing password parameter in the authentication flow
 
-### 3. Advanced Debugging Techniques
+<ScaledImage 
+  src="/assets/img/SSOResolved.png" 
+  alt="SSO Issue Fixed" 
+  size={40}
+  caption="Successfully fixed the SSO authentication issue" 
+/>
 
-Throughout these exercises, you've mastered several advanced debugging techniques:
+### 3. Troubleshooting Cart Functionality with Tracing
 
-- Using custom error attributes to provide context for exceptions
-- Implementing breadcrumbs to track user journeys
-- Creating custom spans to monitor performance and trace transactions
-- Leveraging Sentry's trace view to understand the relationship between frontend and backend errors
-- Debugging asynchronous operations and API calls
+Next, we addressed a cart functionality issue using Sentry's powerful tracing capabilities:
+
+- You implemented tracing to visualize the complete data flow across components
+- You learned how to add span attributes to capture critical context at each step
+- You analyzed trace data to identify that products were missing required SKU properties
+- You fixed the issue by properly preparing products before adding them to the cart
+
+<ScaledImage 
+  src="/assets/img/cartAdded.png" 
+  alt="Cart Issue Fixed" 
+  size={40}
+  caption="Successfully fixed the cart functionality" 
+/>
+
+### 4. Debugging Checkout with Tracing
+
+In our final exercise, you tackled a payment processing issue with Apple Pay:
+
+- You implemented comprehensive tracing across the entire payment flow
+- You discovered how to examine trace hierarchies and attributes to understand complex processes
+- You identified that although address data was being fetched, it wasn't being properly used
+- You fixed the Apple Pay payment process by ensuring address data was properly incorporated
+
+<ScaledImage 
+  src="/assets/img/paymentSuccess.png" 
+  alt="Checkout Fixed" 
+  size={40}
+  caption="Successfully completed payment with Apple Pay" 
+/>
+
+## Key Takeaways
+
+Through these practical debugging scenarios, you've mastered several essential Sentry skills:
+
+- **Issue Identification**: Using Sentry to quickly identify and prioritize critical issues
+- **Context Gathering**: Leveraging stack traces, device info, and user impact data to understand problems
+- **Visual Debugging**: Using mobile replays to see exactly what users experienced
+- **Data Flow Visualization**: Implementing tracing to understand complex interactions between components
+- **Attribute Tracking**: Adding span attributes to provide critical context at each step
+- **Systematic Debugging**: Using a methodical approach to identify, analyze, and fix issues
 
 ## What's Next?
 
@@ -45,14 +95,14 @@ Sentry offers many more features beyond what we've covered in this workshop. Her
     [Learn more about Performance Monitoring](https://docs.sentry.io/product/performance/)
   </Card>
 
-  <Card title="Replays" icon="play">
-    See exactly what users experienced when errors occurred with pixel-perfect recreations of user sessions.
-    [Explore Session Replay](https://docs.sentry.io/product/session-replay/)
+  <Card title="Mobile Vitals" icon="mobile">
+    Monitor critical mobile-specific metrics like app start time, slow frames, and frozen frames.
+    [Explore Mobile Vitals](https://docs.sentry.io/product/performance/mobile-vitals/)
   </Card>
 
-  <Card title="User Feedback" icon="comment">
-    Collect user feedback when errors occur to better understand the impact and context of issues.
-    [Set up User Feedback](https://docs.sentry.io/product/user-feedback/)
+  <Card title="Release Health" icon="check">
+    Monitor adoption rates, crash-free users, and crash-free sessions for each release.
+    [Set up Release Health](https://docs.sentry.io/product/releases/health/)
   </Card>
 
   <Card title="Profiling" icon="chart">
@@ -61,28 +111,10 @@ Sentry offers many more features beyond what we've covered in this workshop. Her
   </Card>
 </CardGrid>
 
-### More Monitoring Solutions
-
-- **[Uptime Monitoring](https://docs.sentry.io/product/alerts/create-alerts/uptime-alert-config/)**: Monitor your services' availability and be alerted when they're down.
-
-- **[Cron Monitoring](https://docs.sentry.io/platforms/javascript/guides/nextjs/crons/)**: Track the health and performance of your scheduled jobs and background tasks.
-
-- **[Web Vitals](https://docs.sentry.io/product/performance/web-vitals/)**: Measure and improve key user-centric metrics that affect user experience.
-
-- **[Release Health](https://docs.sentry.io/product/releases/)**: Monitor the health of releases to catch errors before they impact too many users.
-
-- **[Trace View](https://docs.sentry.io/product/performance/trace-view/)**: Get a complete picture of transactions as they propagate through your system.
-
 ## Additional Resources
 
-- **[Sentry Documentation](https://docs.sentry.io/)**: Comprehensive guides and API references for all Sentry features.
+- **[Sentry Mobile Documentation](https://docs.sentry.io/platforms/react-native/)**: Comprehensive guides for implementing Sentry in mobile applications.
 
 - **[Sentry Blog](https://sentry.io/blog/)**: Stay updated with the latest features, use cases, and best practices.
 
 - **[Sentry on GitHub](https://github.com/getsentry)**: Explore Sentry's open-source repositories and contribute to the project.
-
-## Final Thoughts
-
-By implementing proper error monitoring and debugging practices as demonstrated in this workshop, you're now equipped to build more resilient applications and provide better experiences for your users. Remember that the most effective debugging strategy is proactive monitoring combined with detailed context gathering.
-
-We hope you found this workshop valuable and that you'll continue exploring Sentry's capabilities to enhance your application development workflow. Happy debugging!

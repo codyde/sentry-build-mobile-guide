@@ -1,0 +1,137 @@
+---
+title: "Part 2: Debugging SSO in Sentry Issues"
+description: "Debugging the missing products issue in the marketplace"
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import ScaledImage from '../../components/ScaledImage.astro';
+
+Back to our Single Sign On issue. When we attempt to sign in to ou application using the SSO option, it's throwing an error. 
+
+<ScaledImage 
+  src="/assets/img/SSOMobileError.png" 
+  alt="SSO Error" 
+  size={40}
+  caption="Error encountered when attempting to use Single Sign-On" 
+/>
+
+As we saw previously, since we've set up Sentry, we're capturing this error along with all of its context, and we can use this to help us debug the problem. 
+
+## Sentry Issues view
+
+Click into the issue into the issue, we're getting all this context immediately. 
+
+<ScaledImage 
+  src="/assets/img/UnborkedFullIssue.png" 
+  alt="Unborked First Issue" 
+  size={75}
+  caption="Unborked First Issue" 
+/>
+
+Immediatly we're able to see very important information about the error coming in including 
+
+- Impacted users 
+- OS and Platform distribution infromation 
+- Information about the users device 
+- Seer's initial analysis of the error and possible solution 
+
+
+### Stack Traces 
+
+Scrolling down will take us into the Stack Trace. Stack traces let us see exactly where in the code an error is happening. Many times it might only capture the actual exception message; but typically the failing part is close by. This give syou an easy way to get started looking at problems in your code.
+
+<ScaledImage 
+  src="/assets/img/StackTrace.png" 
+  alt="SSO Stacktrace" 
+  size={90}
+  caption="Stack trace for the SSO error" 
+/>
+
+### Mobile Replay
+
+Scrolling down further, we'll see a view that shows our applications UI with the data obfuscated. Mobile replays by default hide any text within the application for Security reasons. These can be disabled in the SDK configurations if needed. 
+
+<ScaledImage 
+  src="/assets/img/UnborkedReplay.png" 
+  alt="Unborked Replay" 
+  size={90}
+  caption="Unborked Replay" 
+/>
+
+Mobile replays let you exeperience the issues from the user's perspective, and see how exactly what they were doing when the error occurred. You can see these errors represented on the timeline view, and if you click into it - you can see additional information around what was happening at the time of the error.
+
+## Fixing the issue 
+
+Lets get into the application code. 
+
+From our Stack Trace, we can see that the offending file is `app/(auth)/login.tsx`. 
+
+Our Stack trace showed where in the application code this problem was happening, but when we look, we can see a lot more going on in this component. 
+
+```javascript
+} else {
+   // WORKING VERSION (uncomment to fix):
+   // const demoUsername = 'demo';
+   // const demoPassword = 'demo123';
+   // await loginWithSSO(demoUsername, demoPassword);
+   
+   // BROKEN: Missing password parameter for SSO login
+   // This will cause the auth to fail because the password is required but not sent
+   const demoUsername = 'demo';
+   await loginWithSSO(demoUsername);
+}
+router.replace('/(tabs)');
+} catch (error: any) {
+setLoginError('Login failed. Please try again.');
+console.error('Login error:', error);
+throw new Error(`Login failed: ${error.message || 'Unknown error'}`);
+}
+```
+
+Convienently enough, we can see some guidance in the code for fixing this issue - our demo code doesn't include a password parameter, which is an easy enough fix. 
+
+Update your application code to below to resolve the SSO issue. 
+
+```javascript
+} else {
+   const demoUsername = 'demo';
+   const demoPassword = 'demo123';
+   await loginWithSSO(demoUsername, demoPassword);
+}
+router.replace('/(tabs)');
+} catch (error: any) {
+setLoginError('Login failed. Please try again.');
+console.error('Login error:', error);
+throw new Error(`Login failed: ${error.message || 'Unknown error'}`);
+}
+```
+
+The application is set to hot reload, so as soon as you save the file, you can go test in your application again. 
+
+Once you do, you'll see that the issue is resolved and you can successfully sign in! 
+
+<ScaledImage 
+  src="/assets/img/SSOResolved.png" 
+  alt="SSO Resolved" 
+  size={40}
+  caption="SSO Resolved" 
+/>
+
+## What did we learn? 
+
+- Sentry issues give you a ton of information about the error and the users impacted 
+- Stack traces are instrumented automatically as part of your setup, and let you see where in your code the issue is happening at, making it fast to debug and figure out whats wrong 
+- Mobile replays give you a great way to understand the user experience when the error occurred, and see exactly how they were experiencing the problem
+
+Now that we've fixed our first issue, we can Resolve it in Sentry and move forward... why don't you go buy something? Oh... look at that, you can't add things to the cart.
+
+<ScaledImage 
+  src="/assets/img/CartMobileError.png" 
+  alt="Cart Mobile Error" 
+  size={25}
+  caption="Cart Mobile Error" 
+/>
+
+
+
+

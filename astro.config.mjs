@@ -30,12 +30,12 @@ export default defineConfig({
                       { label: 'Quickstart', slug: 'quickstart' },
                       { label: 'Configuring Sentry', slug: 'configure-sentry' },
                       {
-                          label: 'Debugging Issues',
+                          label: 'Debugging Mobile Issues',
                           items: [
                               { label: 'Part 1: Tuning Alerts', slug: '1-tuning-alerts-debugging' },
-                              { label: 'Part 2: Debugging SSO with Sentry Issues', slug: 'debugging-issues/issue-1-products-api' },
-                              { label: 'Part 3: Troubleshooting the Store Cart with Tracing', slug: 'debugging-issues/issue-2-fix-me-button' },
-                              { label: 'Part 4: Fixing the Checkout with Tracing', slug: 'debugging-issues/issue-3-auth-header' },
+                              { label: 'Part 2: Debugging SSO with Sentry Issues', slug: '2-fixing-sso' },
+                              { label: 'Part 3: Troubleshooting the Store Cart with Tracing', slug: '3-tracing-cart-issue' },
+                              { label: 'Part 4: Fixing the Checkout with Tracing', slug: '4-fixing-checkout' },
                           ]
                       },
                       { label: 'Wrapping Up!', slug: 'wrapping-up' },
@@ -45,7 +45,7 @@ export default defineConfig({
                   label: 'Resources',
                   items: [
                       { label: 'Sentry Documentation', link: 'https://docs.sentry.io/' },
-                      { label: 'Next.js SDK', link: 'https://docs.sentry.io/platforms/javascript/guides/nextjs/' },
+                      { label: 'React Native SDK', link: 'https://docs.sentry.io/platforms/javascript/guides/react-native/' },
                   ],
               },
           ],

@@ -4,14 +4,18 @@ description: Introduction to tuning alerts in Sentry
 ---
 
 import { Steps } from '@astrojs/starlight/components';
+import ScaledImage from '../../components/ScaledImage.astro';
 
 Sentry's installed, and we've captured our first error! Great! But... this could get noisy real fast. Sentry gives us a ton of different options around tuning the way alerts are received so we can focus on th ones that matter.
 
-## Tuning Alerts
-
 Picture this: You grab your phone to doomscroll and decide you're going to do something more productive. You jump into Unborked to buy yourself some farm to fork hand crafted error fixes, and you can't even sign in. This is the night,are you live in RIGHT NOW.
 
-![ErrorFix Marketplace](../../assets/img/Unborked-First-Issue.png)
+<ScaledImage 
+  src="/assets/img/Unborked-First-Issue.png" 
+  alt="ErrorFix Marketplace" 
+  size={90}
+  caption="ErrorFix Marketplace" 
+/>
 
 Single sign on? More like single sign not... ok, that was corny. I get it. But either way, single sign on is hosed, and we need to fix it, but first, we need to make sure that we're setting up better alerts for when things go wrong.
 
@@ -21,7 +25,12 @@ Something Sentry is strongest at is creating issues that are actionable, meaning
 
 Sentry has a lot to offer when it comes to ways to configure custom alert behavior.
 
-![Alert Types in Sentry](../../assets/img/AlertsScreen.png)
+<ScaledImage 
+  src="/assets/img/AlertsScreen.png" 
+  alt="Alert Types in Sentry" 
+  size={90}
+  caption="Alert Types in Sentry" 
+/>
 
 ## Cleaning up our alerts 
 
@@ -47,7 +56,12 @@ If you examine the default rule that configured for your Sentry project it's pre
        - Number of events in an issue in an issue is more than (value) in (interval) and set it to 3 in 1 minute (for testing)
        - Send an email to your user
 
-       ![Alert Configuration](../../assets/img/AlertConfiguration.png)
+       <ScaledImage 
+         src="/assets/img/AlertConfiguration.png" 
+         alt="Alert Configuration" 
+         size={90}
+         caption="Alert Configuration" 
+       />
 
   5. Test the alert
 

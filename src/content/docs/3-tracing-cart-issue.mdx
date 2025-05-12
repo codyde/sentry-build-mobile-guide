@@ -1,0 +1,286 @@
+---
+title: "Part 3: Troubleshooting the Store Cart with Tracing"
+description: "Use tracing to understand the communication flow in Unborked"
+---
+
+import { Steps } from '@astrojs/starlight/components';
+import ScaledImage from '../../components/ScaledImage.astro';
+
+Now that we've fixed the SSO issue, let's try to purchase something from our marketplace. But when we try to add an item to the cart, we encounter a new error.
+
+<ScaledImage 
+  src="/assets/img/CartMobileError.png" 
+  alt="Cart Error" 
+  size={40}
+  caption="Error encountered when attempting to add an item to the cart" 
+/>
+
+This time, we'll use Sentry's tracing capabilities to get a deeper understanding of what's happening between our components when this error occurs.
+
+## Examining the Issue in Sentry
+
+When we look at the issue in Sentry, we see the basic error information, but let's focus on understanding the interaction between components.
+
+<ScaledImage 
+  src="/assets/img/CartFailure.png" 
+  alt="Cart Failure" 
+  size={80}
+  caption="Error details in Sentry for the cart failure" 
+/>
+
+The error message indicates something is failing when we try to add an item to our cart. But with just the error details, it's hard to see exactly where in the flow the problem occurs.
+
+## Understanding Tracing
+
+Tracing helps us visualize the path of operations in our application, showing us how different functions and services interact. Let's implement tracing to get better visibility into our cart functionality.
+
+### Adding Tracing to Our Code
+
+We need to modify our cart utility functions to add tracing. In our application, we have a centralized `handleAddToCart` function in the `cartUtils.js` file that manages the cart operations. Let's add tracing to this file while keeping the original (broken) functionality intact:
+
+```javascript
+// In cartUtils.js
+import * as Sentry from '@sentry/react-native';
+import { Product } from '../types/product';
+import { Alert } from 'react-native';
+
+/**
+ * Utility function to prepare a product for adding to cart with tracing
+ */
+export const prepareProductForCart = (product: Product) => {
+  return Sentry.startSpan(
+    { name: "prepareProductForCart" },
+    (span) => {
+      // Set product information as span attributes
+      span.setAttributes({
+        productId: product.id,
+        productName: product.name,
+        productPrice: product.price,
+        hasRequiredSku: Boolean(product.sku)
+      });
+      
+      // BROKEN: This will return the product without the required SKU property
+      // We're keeping this broken to demonstrate how tracing helps identify issues
+      return product;
+      
+      // WORKING VERSION (uncomment to fix):
+      // const prepared = { ...product, sku: `SKU-${product.id}` };
+      // span.setAttributes({
+      //   generatedSku: `SKU-${product.id}`,
+      //   outputHasRequiredSku: true
+      // });
+      // return prepared;
+    }
+  );
+};
+
+/**
+ * Centralized function to handle adding a product to cart with tracing
+ */
+export const handleAddToCart = (
+  addItemFn: (product: Product, quantity: number) => void,
+  product: Product, 
+  quantity: number = 1,
+  onSuccess?: () => void,
+  onError?: (errorMessage: string) => void
+) => {
+  return Sentry.startSpan(
+    { name: "handleAddToCart" },
+    async (span) => {
+      try {
+        // Set operation information as span attributes
+        span.setAttributes({
+          quantity: quantity,
+          productId: product.id,
+          productCategory: product.category,
+          operation: "add_to_cart"
+        });
+        
+        // Use the shared utility function to prepare the product
+        const preparedProduct = prepareProductForCart(product);
+        
+        // Add a child span for the add item operation
+        await Sentry.startSpan(
+          { name: "addItemToCart" },
+          async (childSpan) => {
+            // Set cart operation attributes
+            childSpan.setAttributes({
+              productId: preparedProduct.id,
+              productSku: preparedProduct.sku || 'missing-sku',
+              quantity: quantity
+            });
+            addItemFn(preparedProduct, quantity, childSpan);
+          }
+        );
+        
+        // If successful and callback provided, call it
+        if (onSuccess) {
+          onSuccess();
+        }
+      } catch (error: any) {
+        // Handle the error
+        const errorMessage = error.message || 'Failed to add item to cart';
+        
+        // Set error attributes
+        span.setAttributes({
+          error: true,
+          errorMessage: errorMessage
+        });
+        
+        // If error callback provided, call it
+        if (onError) {
+          onError(errorMessage);
+        } else {
+          // Default error handling
+          console.error('Add to cart failed:', error);
+          Alert.alert('Error', errorMessage);
+        }
+        
+        // Capture the error with Sentry
+        Sentry.captureException(error, {
+          extra: {
+            productId: product?.id,
+            quantity: quantity,
+          },
+        });
+        
+        // Rethrow the error for better debugging visibility
+        throw new Error(`Add to cart failed: ${errorMessage}`);
+      }
+    }
+  );
+};
+```
+
+With tracing in place, let's reproduce the error to see what insights we can gain.
+
+## Analyzing the Trace in Sentry
+
+After adding these traces and reproducing the error, we can see a much clearer picture in Sentry. 
+
+Head into the Trace Explorer by navigating to Explore > Traces and searching for one of your span names. You'll see the traces appear in the list, and we can start to explore them.
+
+<ScaledImage 
+  src="/assets/img/SpanError.png" 
+  alt="Cart Trace" 
+  size={90}
+  caption="Trace visualization showing the flow of the add to cart operation" 
+/>
+
+### How to Analyze Spans to Find the Issue
+
+When looking at the trace, follow these steps to identify the problem:
+
+1. **Identify the main transaction**: First, identify the main operation that failed (in this case, adding an item to the cart).
+
+2. **Examine the span hierarchy**: Note the parent-child relationships between spans. This shows you the sequence of operations:
+   - The `handleAddToCart` function starts
+   - It calls `prepareProductForCart`
+   - The product is returned without modification and without a required `sku` property (since we didn't add it)
+   - The `addItemToCart` span attempts to use the product but fails because the SKU is missing
+
+3. **Check span attributes**: Click on each span to view its attributes. Focus particularly on:
+   - The `prepareProductForCart` span: Look at the `hasRequiredSku` attribute to see if it's `false`
+
+<ScaledImage 
+  src="/assets/img/prepareProductForCart.png" 
+  alt="prepareProductForCart" 
+  size={80}
+  caption="prepareProductForCart span attributes" 
+/>
+
+   - The `addItemToCart` span: Check the `productSku` attribute to see if it shows `'missing-sku'`
+
+<ScaledImage 
+  src="/assets/img/addItemToCart.png" 
+  alt="addItemToCart" 
+  size={80}
+  caption="addItemToCart span attributes" 
+/>
+
+4. **Compare input vs. output data**: Compare the attributes between spans to track how data changes:
+   - In the `prepareProductForCart` span, the `hasRequiredSku` attribute is `false`
+   - In the `addItemToCart` span, we see the `productSku` attribute is set to the fallback value `'missing-sku'`
+   - This clearly shows the product preparation function isn't adding the required SKU
+
+5. **Check span status and duration**: Look for spans marked with errors or spans that took longer than expected:
+   - The `addItemToCart` span will show an error status
+   - This tells us the operation failed at this specific point in the flow
+
+When we examine the span data, we can see that the `productSku` attribute is set to 'missing-sku' when the product is passed to the addItem function, highlighting our problem:
+
+<ScaledImage 
+  src="/assets/img/missingSku.png" 
+  alt="missingSku" 
+  size={40}
+  caption="Span attributes showing the missing sku property on productSku" 
+/>
+
+### Connecting the Dots
+
+By examining these span attributes, we can now trace the exact sequence of events:
+
+1. The product starts without a SKU property (as shown by `hasRequiredSku: false` in the first span)
+2. The prepare function returns the product unchanged (no additional attributes showing a transformation)
+3. When we try to add the item to the cart, it expects a SKU but doesn't find one (shown by `productSku: 'missing-sku'`)
+4. This causes the error in the cart addition function
+
+This analysis points us directly to the `prepareProductForCart` function as the source of our problem. The product needs to have a SKU added before it can be added to the cart.
+
+## Fixing the Issue
+
+Based on our trace data, we can see that the issue is in the `prepareProductForCart` function. The trace clearly shows that products are missing the required SKU property when they're passed to the cart. 
+
+Let's fix the issue by uncommenting the working version in our code and properly adding the SKU to the product:
+
+```javascript
+// In cartUtils.js
+export const prepareProductForCart = (product: Product) => {
+  return Sentry.startSpan(
+    { name: "prepareProductForCart" },
+    (span) => {
+      // Set product information as span attributes
+      span.setAttributes({
+        productId: product.id,
+        productName: product.name,
+        productPrice: product.price,
+        hasRequiredSku: Boolean(product.sku)
+      });
+      
+      // WORKING VERSION (uncomment to fix):
+      const prepared = { ...product, sku: `SKU-${product.id}` };
+      span.setAttributes({
+        generatedSku: `SKU-${product.id}`,
+        outputHasRequiredSku: true
+      });
+      return prepared;
+    }
+  );
+};
+```
+
+After making this change, let's try adding an item to the cart again:
+
+<ScaledImage 
+  src="/assets/img/cartAdded.png" 
+  alt="cartAdded" 
+  size={40}
+  caption="Successfully added item to cart" 
+/>
+
+## What We Learned
+
+Using Sentry's tracing capabilities provided us with several benefits:
+
+1. **Visualized Code Flow**: We could see the exact sequence of function calls leading to the error
+2. **Data Inspection**: We captured the state of our data at each step of the process using span attributes
+3. **Performance Insights**: We gained visibility into how long each operation took
+4. **Context Preservation**: All the relevant information was captured in one place, making debugging easier
+
+Tracing is particularly valuable for debugging complex interactions between components and services. By adding span attributes at key points in our code, we created a detailed record of the data flow that led us directly to the source of the problem - a missing SKU property that was required for cart functionality.
+
+## Next Steps
+
+Now that we've fixed the cart functionality, you can successfully add items and complete your purchase. Tracing has shown us not just where errors occur, but the entire journey of data through our application, giving us deeper insights into our code's behavior.
+
+As you continue developing your application, consider adding tracing to other complex workflows to gain similar visibility into their operation.
