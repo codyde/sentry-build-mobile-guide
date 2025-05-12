@@ -109,7 +109,13 @@ Let's face it—your code is going to break, even when its mobile. The question 
       We'll need to update the configuration to match the below: 
 
       ```javascript
+         import { Stack, useNavigationContainerRef, usePathname, useSegments } from 'expo-router';
          import * as Sentry from '@sentry/react-native';
+         // keep other imports as well
+
+         const navigationIntegration = Sentry.reactNavigationIntegration({
+           enableTimeToInitialDisplay: true,
+         });
 
          Sentry.init({
             dsn: '<Your Sentry DSN>',
@@ -119,10 +125,25 @@ Let's face it—your code is going to break, even when its mobile. The question 
 
             replaysSessionSampleRate: 0.1,
             replaysOnErrorSampleRate: 1.0,
-            integrations: [Sentry.mobileReplayIntegration(), Sentry.feedbackIntegration()],
+
+            integrations: [
+               Sentry.mobileReplayIntegration(), 
+               Sentry.feedbackIntegration(),
+               navigationIntegration,
+            ],
 
          });
-         ```
+         
+         export default Sentry.wrap(function RootLayout() {
+            const ref = useNavigationContainerRef();
+            useEffect(() => {
+               if (ref) {
+                  navigationIntegration.registerNavigationContainer(ref);
+               }
+            }, [ref]);
+
+         // ... other application code ....
+      ```
       We're adding in the tracesSampleRate property and setting it to 1.0 to sample 100% of spans coming inbound. Span sampling lets us control how many of the traces that are sent to Sentry are actually kept and used. Setting these high is helpful for debugging, but in production you'll want to set them lower to avoid sending too much data.
 
   3. **Increase Replay Sample Rate and Unmask Content**
@@ -130,7 +151,9 @@ Let's face it—your code is going to break, even when its mobile. The question 
       To simplify debugging and show a bit more content in the workshop, we're going to also bump up the sample rate for all replays, and set the flags that will unmask the content in Replays. In production environments this not recommended as it can expose sensitive data - but in a workshop, YOLO. 
 
       ```javascript
+      import { Stack, useNavigationContainerRef, usePathname, useSegments } from 'expo-router';
       import * as Sentry from '@sentry/react-native';
+      // keep other imports as well
 
       Sentry.init({
          dsn: '<Your Sentry DSN>',
@@ -140,10 +163,14 @@ Let's face it—your code is going to break, even when its mobile. The question 
 
          replaysSessionSampleRate: 1,0,
          replaysOnErrorSampleRate: 1.0,
-         integrations: [Sentry.mobileReplayIntegration(
-            maskAllText: false,
-            blockAllMedia: false,
-         ), Sentry.feedbackIntegration()],
+         integrations: [
+            Sentry.mobileReplayIntegration(
+              maskAllText: false,
+              blockAllMedia: false,
+            ), 
+            Sentry.feedbackIntegration(),
+            navigationIntegration
+         ],
       });
       ```
       
